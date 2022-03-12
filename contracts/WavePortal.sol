@@ -19,6 +19,11 @@ contract WavePortal {
 
     Wave[] waves;
 
+    /*
+     * "address => uint mapping"は、アドレスと数値を関連付ける
+     */
+    mapping(address => uint256) public lastWavedAt;
+
     constructor() payable {
         console.log("We have been constructed!");
         /*
@@ -28,6 +33,19 @@ contract WavePortal {
     }
 
     function wave(string memory _message) public {
+        /*
+         * 現在ユーザーがwaveを送信している時刻と、前回waveを送信した時刻が15分以上離れていることを確認。
+         */
+        require(
+            lastWavedAt[msg.sender] + 30 seconds < block.timestamp,
+            "Wait"
+        );
+
+        /*
+         * ユーザーの現在のタイムスタンプを更新する
+         */
+        lastWavedAt[msg.sender] = block.timestamp;
+
         totalWaves += 1;
         console.log("%s has waved!", msg.sender);
 
