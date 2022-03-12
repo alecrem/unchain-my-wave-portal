@@ -21,10 +21,13 @@ const main = async () => {
   );
 
   /*
-   * Waveを取得
+   * 2回 waves を送るシミュレーションを行う
    */
-  let waveTxn = await waveContract.wave("A message!");
+  const waveTxn = await waveContract.wave("This is wave #1");
   await waveTxn.wait();
+
+  const waveTxn2 = await waveContract.wave("This is wave #2");
+  await waveTxn2.wait();
 
   /*
    * コントラクトの残高を取得し、Waveを取得した後の結果を出力
