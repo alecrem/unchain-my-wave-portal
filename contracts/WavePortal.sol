@@ -8,13 +8,15 @@ contract WavePortal {
 
     /* 乱数生成のための基盤となるシード（種）を作成 */
     uint256 private seed;
+    string private rarity;
 
-    event NewWave(address indexed from, uint256 timestamp, string message);
+    event NewWave(address indexed from, uint256 timestamp, string message, string rarity);
 
     struct Wave {
         address waver;
         string message;
         uint256 timestamp;
+        string rarity;
     }
 
     Wave[] waves;
@@ -41,7 +43,7 @@ contract WavePortal {
          * 現在ユーザーがwaveを送信している時刻と、前回waveを送信した時刻が15分以上離れていることを確認。
          */
         require(
-            lastWavedAt[msg.sender] + 5 minutes < block.timestamp,
+            lastWavedAt[msg.sender] + 0 seconds < block.timestamp,
             "Wait"
         );
 
@@ -52,8 +54,6 @@ contract WavePortal {
 
         totalWaves += 1;
         console.log("%s has waved!", msg.sender);
-
-        waves.push(Wave(msg.sender, _message, block.timestamp));
 
         /*
          * ユーザーのために乱数を生成
@@ -71,11 +71,12 @@ contract WavePortal {
          */
         if (seed < 66667) {
             console.log("%s got a rare reward!", msg.sender);
+            rarity = "Rare prize! 0.0045 ETH";
 
             /*
              * レア: 1/15
              */
-            uint256 prizeAmount = 0.00045 ether;
+            uint256 prizeAmount = 0.0045 ether;
             require(
                 prizeAmount <= address(this).balance,
                 "Trying to withdraw more money than the contract has."
@@ -84,6 +85,7 @@ contract WavePortal {
             require(success, "Failed to withdraw money from contract.");
         } else if (seed < 200000) {
             console.log("%s got an uncommon reward!", msg.sender);
+            rarity = "Uncommon prize! 0.0001 ETH";
 
             /*
              * アンコモン: 3/15
@@ -97,9 +99,12 @@ contract WavePortal {
             require(success, "Failed to withdraw money from contract.");
         } else {
             console.log("%s did not win (common).", msg.sender);
+            rarity = "Common outcome - no prize";
 		}
 
-        emit NewWave(msg.sender, block.timestamp, _message);
+        waves.push(Wave(msg.sender, _message, block.timestamp, rarity));
+
+        emit NewWave(msg.sender, block.timestamp, _message, rarity);
     }
 
     function getAllWaves() public view returns (Wave[] memory) {
