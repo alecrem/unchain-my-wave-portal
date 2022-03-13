@@ -1,8 +1,21 @@
-# Basic Sample Hardhat Project
+# Basic ETH dApp contract for Rinkeby
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+Test the contract:
 
-Try running some of the following tasks:
+```shell
+npx hardhat run scripts/run.js
+```
+
+Deploy the contract to Rinkeby Test Network:
+
+```shell
+npx hardhat run scripts/deploy.js --network rinkeby
+```
+
+- [Frontend counterpart repository](https://github.com/alecrem/unchain-dApp-starter-project)
+- Frontend deployed here: https://my-wave-portal-xi.vercel.app/
+
+## Basic Hardhat tasks:
 
 ```shell
 npx hardhat accounts
